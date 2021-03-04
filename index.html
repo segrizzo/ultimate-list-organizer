@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="header">
+      <h1>Ultimate Lists Organizer</h1>
+    </div>
+    <hr />
+    <main>
+      <section id="mainContent">
+        <button id="petitbouton" onclick="openModal('newListForm')">
+          Nouvelle Liste
+        </button>
+      </section>
+      <div id="sidenav">
+        <h2>To-Do List</h2>
+        <div>
+          <input type="checkbox" name="diner" />
+          <label for="diner">Dîner</label>
+        </div>
+        <div>
+          <input type="checkbox" name="sport" />
+          <label for="sport">Sport</label>
+        </div>
+      </div>
+    </main>
+    <div id="newListForm" class="modal">
+      <div class="modal-content">
+        <span onclick="closeModal('newListForm')" class="close">&times;</span>
+        <form onsubmit="onListCreation(event)" id="listForm">
+          <label for="category">Catégorie</label>
+          <input
+            type="text"
+            autocomplete="off"
+            name="category"
+            id="category"
+            list="categoriesList"
+          />
+          <datalist id="categoriesList"> </datalist>
+          <label for="listName">Nouvelle Liste</label>
+          <input type="text" id="newListTitle" name="listName" />
+          <button type="submit">Créer la liste</button>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-firestore.js"></script>
+  <script src="index.js"></script>
+</html>

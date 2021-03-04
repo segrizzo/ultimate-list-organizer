@@ -1,0 +1,121 @@
+* {
+  font-family: "Nunito Sans", sans-serif;
+}
+h1,
+h2 {
+  font-family: "Poppins", sans-serif;
+}
+ol {
+  margin: 0px;
+}
+a {
+  color: black;
+  text-decoration: none;
+  transition: 0.4s;
+}
+a:hover {
+  color: tomato;
+}
+button {
+  background-color: white;
+  border: tomato 2px solid;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: color 0.5s, background-color 1s;
+}
+button:hover {
+  background-color: tomato;
+  border: white;
+  color: white;
+}
+.bouton-plus {
+  margin-left: 10px;
+}
+#petitbouton {
+  margin: 0 auto;
+}
+.bouton-plus-content {
+  border: none;
+  color: lightgray;
+  font-size: 10px;
+  display: block;
+}
+#header {
+  width: 100vw;
+  height: 10vh;
+  text-align: center;
+}
+main {
+  display: flex;
+  width: 100vw;
+}
+#mainContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#mainContent header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#mainContent h2 {
+  font-size: 20px;
+  text-align: center;
+  font-weight: bolder;
+  text-decoration: underline;
+}
+#sidenav {
+  width: 15vw;
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+  padding: 10px;
+}
+
+#title1 {
+  color: black;
+  font-weight: bold;
+}
+h1 {
+  color: black;
+}
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
