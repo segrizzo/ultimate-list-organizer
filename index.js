@@ -21,8 +21,14 @@ function initFireBase() {
 }
 async function displayLists() {
   const querySnapshot = await db.collection("lists").orderBy("createdAt").get();
-  const fetchedLists = querySnapshot.docs.map((doc) => doc.data());
-
+  const fetchedLists = querySnapshot.docs.map((doc) => {
+    const id = doc.id;
+    const data = doc.data();
+    return {
+      ...data,
+      id,
+    };
+  });
   const sortByCategory = (map, currentValue) => {
     if (map.has(currentValue.category)) {
       const currentDefinition = map.get(currentValue.category);
@@ -39,7 +45,7 @@ async function displayLists() {
     document.getElementById("mainContent").append(articleclone);
     for (let list of lists) {
       console.log(list);
-      let li = createList(list.title);
+      let li = createList(list);
       articleclone.querySelector("ol").append(li);
     }
   }
@@ -80,17 +86,28 @@ function createSection(title, articleid) {
   article.append(ol);
   return article;
 }
-function createList(listTitle) {
+function createList(list) {
   let li = document.createElement("li");
-  li.id = listTitle;
-  li.innerHTML = listTitle;
+  li.id = list.id;
+  li.innerHTML = list.title;
   let button = document.createElement("button");
   button.className = "bouton-plus-content";
   button.innerHTML = "+ Ajouter";
   li.append(button);
   button.onclick = function () {
+    const label = document.getElementById("newLinkWrapper");
+    const formTitle = document.getElementById("listTitleNewItemForm");
+    const form = document.getElementById("listItemForm");
+    form.onsubmit = function (e) {
+      onListItemCreation(e, list);
+    };
+    formTitle.innerHTML = list.title;
+    if (list.type === "link") {
+      label.style.display = "block";
+    } else {
+      label.style.display = "none";
+    }
     openModal("modifListContentForm");
-
     // Appeler un H3 qui contienne list Title + un ul contenant des li avec chaque item
     // const input = document.getElementById("category");
     // input.value = articleid;
@@ -102,29 +119,66 @@ async function onListCreation(e) {
   e.preventDefault();
   const newListTitle = document.getElementById("newListTitle").value;
   const categoryTitle = document.getElementById("category").value;
+  const listType = document.getElementById("type-select").value;
+  let newList = {
+    title: newListTitle,
+    items: [],
+    createdAt: new Date(),
+    category: categoryTitle,
+    type: listType,
+  };
   try {
-    const docRef = await db.collection("lists").add({
-      title: newListTitle,
-      items: [],
-      createdAt: new Date(),
-      category: categoryTitle,
+    const docRef = await db.collection("lists").add(newList);
+    newList.id = docRef.id;
+  } catch (error) {
+    console.error("Error adding document: ", error);
+    alert(error);
+  }
+  const freshList = createList(newList);
+  const categorynode = document.getElementById(categoryTitle);
+  if (categorynode === null) {
+    const newCategory = createSection(categoryTitle, categoryTitle);
+    document.getElementById("mainContent").append(newCategory);
+    newCategory.querySelector("ol").append(freshList);
+    addCategoryDataList(categoryTitle);
+  } else {
+    categorynode.querySelector("ol").append(freshList);
+  }
+
+  closeModal("newListForm");
+}
+
+async function onListItemCreation(e, list) {
+  e.preventDefault();
+  const listContentText = document.getElementById("newTextItem").value;
+  const listContentLink = document.getElementById("newLinkItem").value;
+  let newListItem;
+  switch (list.type) {
+    case "todo":
+      newListItem = { content: listContentText, checked: false };
+      break;
+    case "link":
+      newListItem = { content: listContentText, link: listContentLink };
+      break;
+    case "text":
+      newListItem = { content: listContentText };
+      break;
+    default:
+      alert("Type does not exist");
+      break;
+  }
+  console.log(list.id);
+  try {
+    const listRef = db.collection("lists").doc(list.id);
+
+    listRef.update({
+      items: firebase.firestore.FieldValue.arrayUnion(newListItem),
     });
   } catch (error) {
     console.error("Error adding document: ", error);
     alert(error);
   }
-  const newList = createList(newListTitle);
-  const categorynode = document.getElementById(categoryTitle);
-  if (categorynode === null) {
-    const newCategory = createSection(categoryTitle, categoryTitle);
-    document.getElementById("mainContent").append(newCategory);
-    newCategory.querySelector("ol").append(newList);
-    addCategoryDataList(categoryTitle);
-  } else {
-    categorynode.querySelector("ol").append(newList);
-  }
-
-  closeModal("newListForm");
+  closeModal("modifListContentForm");
 }
 
 function initCategoriesDataList(listsByCategoryMap) {

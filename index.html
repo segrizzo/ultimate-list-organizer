@@ -49,7 +49,33 @@
           <datalist id="categoriesList"> </datalist>
           <label for="listName">Nouvelle Liste</label>
           <input type="text" id="newListTitle" name="listName" />
+
+          <label for="type-select">Choisir un type</label>
+          <select name="types" id="type-select">
+            <option value="">Type de la liste</option>
+            <option value="todo">To-do</option>
+            <option value="text">Texte simple</option>
+            <option value="link">Liens</option>
+          </select>
+
           <button type="submit">Créer la liste</button>
+        </form>
+      </div>
+    </div>
+    <div id="modifListContentForm" class="modal">
+      <div class="modal-content">
+        <span onclick="closeModal('modifListContentForm')" class="close"
+          >&times;</span
+        >
+        <form id="listItemForm">
+          <h2 id="listTitleNewItemForm"></h2>
+          <label for="newTextItem">Nouveau Texte</label>
+          <input type="text" name="newTextItem" id="newTextItem" />
+          <div id="newLinkWrapper">
+            <label for="newLinkItem">Nouveau Lien</label>
+            <input type="link" name="newLinkItem" id="newLinkItem" />
+          </div>
+          <button type="submit">Ajouter à la liste</button>
         </form>
       </div>
     </div>
