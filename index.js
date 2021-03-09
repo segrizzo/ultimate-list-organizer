@@ -44,7 +44,6 @@ async function displayLists() {
     const articleclone = createSection(category, category);
     document.getElementById("mainContent").append(articleclone);
     for (let list of lists) {
-      console.log(list);
       let li = createList(list);
       articleclone.querySelector("ol").append(li);
     }
@@ -86,10 +85,48 @@ function createSection(title, articleid) {
   article.append(ol);
   return article;
 }
+
+function createListItemNode(item, type) {
+  let li = document.createElement("li");
+
+  switch (type) {
+    case "todo":
+      let input = document.createElement("input");
+      input.checked = item.checked;
+      input.type = "checkbox";
+      li.append(input);
+      let span = document.createElement("span");
+      span.innerHTML = item.content;
+      li.append(span);
+      break;
+    case "link":
+      let link = document.createElement("a");
+      link.href = item.link;
+      link.innerHTML = item.content;
+      li.append(link);
+      break;
+    case "text":
+      li.innerHTML = item.content;
+      break;
+    default:
+      alert("Type does not exist");
+      break;
+  }
+  return li;
+}
+
 function createList(list) {
   let li = document.createElement("li");
   li.id = list.id;
-  li.innerHTML = list.title;
+  let h3 = document.createElement("h3");
+  h3.innerHTML = list.title;
+  li.append(h3);
+  let ol = document.createElement("ol");
+  li.append(ol);
+  for (let listItem of list.items) {
+    let liMini = createListItemNode(listItem, list.type);
+    ol.append(liMini);
+  }
   let button = document.createElement("button");
   button.className = "bouton-plus-content";
   button.innerHTML = "+ Ajouter";
@@ -108,10 +145,6 @@ function createList(list) {
       label.style.display = "none";
     }
     openModal("modifListContentForm");
-    // Appeler un H3 qui contienne list Title + un ul contenant des li avec chaque item
-    // const input = document.getElementById("category");
-    // input.value = articleid;
-    // input.disabled = true;
   };
   return li;
 }
@@ -167,7 +200,6 @@ async function onListItemCreation(e, list) {
       alert("Type does not exist");
       break;
   }
-  console.log(list.id);
   try {
     const listRef = db.collection("lists").doc(list.id);
 
@@ -178,6 +210,9 @@ async function onListItemCreation(e, list) {
     console.error("Error adding document: ", error);
     alert(error);
   }
+  const freshListItem = createListItemNode(newListItem, list.type);
+  const listNode = document.getElementById(list.id);
+  listNode.querySelector("ol").append(freshListItem);
   closeModal("modifListContentForm");
 }
 
